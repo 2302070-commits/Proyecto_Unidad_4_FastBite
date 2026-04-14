@@ -1,7 +1,12 @@
 {
   "expo": {
-    "name": "Domotic.js",
-    "slug": "Domotic.js",
-    "version": "1.0.0"
+    "name": "FastBite",
+    "slug": "fastbite-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "android": {
+      "package": "com.henry.fastbite"
+    }
   }
 }
