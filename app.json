@@ -7,6 +7,11 @@
     "userInterfaceStyle": "light",
     "android": {
       "package": "com.henry.fastbite"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8a569744-0002-48c9-8153-5f53a8eb9ca7"
+      }
     }
   }
 }

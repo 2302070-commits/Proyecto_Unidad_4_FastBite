@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Text, Card, Chip } from 'react-native-paper';
+import { translateBulkTexts } from '../utils/translator';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function DietScreen({ navigation }) {
@@ -12,29 +13,20 @@ export default function DietScreen({ navigation }) {
     fetchDietMeals(activeFilter);
   }, [activeFilter]);
 
-  const translateMealName = (name) => {
-    let n = name.toLowerCase();
-    if (n.includes('burger')) return 'Hamburguesa Vegana Artesanal';
-    if (n.includes('salad')) return 'Ensalada Verde Desintoxicante';
-    if (n.includes('soup') || n.includes('stew')) return 'Sopa Saludable de Vegetales';
-    if (n.includes('pasta') || n.includes('spaghetti')) return 'Pasta Integral a las Hierbas';
-    if (n.includes('curry') || n.includes('masala')) return 'Curry Especiado de Verduras';
-    if (n.includes('cake') || n.includes('dessert')) return 'Postre Sin Culpa del Chef';
-    if (n.includes('taco') || n.includes('wrap')) return 'Wrap Fresco de Vegetales';
-    if (n.includes('pie') || n.includes('tart')) return 'Tarta Salada de Espinaca';
-    
-    return activeFilter === 'Vegan' ? 'Platillo Vegano Especial' : 'Platillo Vegetariano del Día';
-  };
-
   const fetchDietMeals = async (category) => {
     setLoading(true);
     try {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
       const data = await response.json();
       
-      const translatedMeals = (data.meals || []).map(meal => ({
+      const rawMeals = data.meals || [];
+      const mealNames = rawMeals.map(m => m.strMeal);
+      const translatedNames = await translateBulkTexts(mealNames);
+
+      const translatedMeals = rawMeals.map((meal, index) => ({
         ...meal,
-        strMeal: translateMealName(meal.strMeal),
+        strMealOriginal: meal.strMeal,
+        strMeal: translatedNames[index] || meal.strMeal,
         strCategory: category === 'Vegan' ? 'Vegano' : 'Vegetariano',
         isDiet: true, // Flag to show diet info in detail screen
       }));

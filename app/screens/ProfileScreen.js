@@ -35,11 +35,13 @@ export default function ProfileScreen({ navigation }) {
           title="Métodos de Pago"
           left={(props) => <List.Icon {...props} icon="credit-card" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => alert('Administración de pagos (Próximamente)')}
         />
         <List.Item
           title="Direcciones Guardadas"
           left={(props) => <List.Icon {...props} icon="map-marker" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => alert('Administración de direcciones (Próximamente)')}
         />
       </List.Section>
 
@@ -49,11 +51,13 @@ export default function ProfileScreen({ navigation }) {
           title="Notificaciones"
           left={(props) => <List.Icon {...props} icon="bell" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => alert('Configuración de notificaciones (Próximamente)')}
         />
         <List.Item
           title="Ayuda y Soporte"
           left={(props) => <List.Icon {...props} icon="help-circle" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => navigation.navigate('Support')}
         />
       </List.Section>
 
@@ -66,6 +70,7 @@ export default function ProfileScreen({ navigation }) {
         >
           Cerrar Sesión
         </Button>
+        <Text style={styles.versionText}>FastBite v1.0.0</Text>
       </View>
     </ScrollView>
   );
@@ -115,5 +120,11 @@ const styles = StyleSheet.create({
   logoutButton: {
     borderColor: '#ff6347',
     borderRadius: 8,
+  },
+  versionText: {
+    textAlign: 'center',
+    color: '#aaa',
+    marginTop: 20,
+    fontSize: 12,
   }
 });

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Text, Button, Chip } from 'react-native-paper';
 import { CartContext } from '../context/CartContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -86,7 +86,12 @@ export default function FoodDetailScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView bounces={false} style={styles.scroll}>
-        <Image source={{ uri: food.strMealThumb }} style={styles.image} />
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: food.strMealThumb }} style={styles.image} />
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={28} color="#fff" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.content}>
           <Text variant="headlineLarge" style={styles.title}>{food.strMeal}</Text>
           {food.strMealOriginal && (
@@ -182,6 +187,7 @@ export default function FoodDetailScreen({ route, navigation }) {
           labelStyle={styles.addButtonLabel}
         >
           {food.isRescue ? `Añadir Platillo ($${food.rescuePrice})` 
+            : food.isNormal ? `Añadir Platillo ($${food.price})`
             : food.isRecipe ? `Comprar Ingredientes ($${food.recipeCost})` 
             : 'Añadir al Pedido'}
         </Button>
@@ -206,7 +212,9 @@ export default function FoodDetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
   scroll: { flex: 1 },
-  image: { width: '100%', height: 380, borderBottomLeftRadius: 32, borderBottomRightRadius: 32 },
+  imageContainer: { width: '100%', height: 380 },
+  backButton: { position: 'absolute', top: 40, left: 16, backgroundColor: 'rgba(0,0,0,0.5)', padding: 8, borderRadius: 24, zIndex: 10 },
+  image: { width: '100%', height: '100%', borderBottomLeftRadius: 32, borderBottomRightRadius: 32 },
   content: { paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 },
   title: { fontWeight: '800', color: '#111', marginBottom: 4, letterSpacing: -0.5 },
   originalNameText: { color: '#888', fontStyle: 'italic', marginBottom: 12 },

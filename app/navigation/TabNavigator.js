@@ -5,6 +5,7 @@ import { Badge } from 'react-native-paper';
 import { View } from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen';
+import MenuScreen from '../screens/MenuScreen';
 import DietScreen from '../screens/DietScreen';
 import RecipeScreen from '../screens/RecipeScreen';
 import CartScreen from '../screens/CartScreen';
@@ -39,6 +40,17 @@ export default function TabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="pricetag" size={size} color={color} />
           ),
+        }} 
+      />
+
+      <Tab.Screen 
+        name="Menú" 
+        component={MenuScreen} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="fast-food" size={size} color={color} />
+          ),
+          tabBarActiveTintColor: '#ff9800',
         }} 
       />
       

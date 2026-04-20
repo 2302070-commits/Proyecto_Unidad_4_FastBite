@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Text, Card, Searchbar, Chip } from 'react-native-paper';
+import { translateBulkTexts } from '../utils/translator';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function RecipeScreen({ navigation }) {
@@ -33,24 +34,6 @@ export default function RecipeScreen({ navigation }) {
     return map[q] || q; // If found in map, use english word. Else use the original.
   };
 
-  const translateMealName = (name) => {
-    let n = name.toLowerCase();
-    if (n.includes('burger')) return 'Hamburguesa Casera';
-    if (n.includes('chicken') || n.includes('pollo')) return 'Pollo Preparado';
-    if (n.includes('pizza')) return 'Pizza Casera';
-    if (n.includes('beef') || n.includes('steak')) return 'Guiso de Res';
-    if (n.includes('pork') || n.includes('ribs')) return 'Platillo con Cerdo';
-    if (n.includes('salmon') || n.includes('fish') || n.includes('seafood')) return 'Preparación de Mariscos';
-    if (n.includes('pasta') || n.includes('spaghetti') || n.includes('penne')) return 'Pasta Tradicional';
-    if (n.includes('salad')) return 'Ensalada Nutritiva';
-    if (n.includes('soup') || n.includes('stew')) return 'Sopa/Crema Casera';
-    if (n.includes('taco') || n.includes('fajita')) return 'Tacos/Fajitas Caseras';
-    if (n.includes('rice')) return 'Platillo en base a Arroz';
-    if (n.includes('cake') || n.includes('dessert') || n.includes('pie')) return 'Postre Hecho en Casa';
-    
-    return name; // En modo receta, está bien mostrar a veces el nombre original si no sabemos.
-  };
-
   const fetchRecipes = async (queryParam) => {
     if (!queryParam) return;
     setLoading(true);
@@ -60,10 +43,14 @@ export default function RecipeScreen({ navigation }) {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${englishQuery}`);
       const data = await response.json();
       
-      const mappedRecipes = (data.meals || []).map(meal => ({
+      const rawMeals = data.meals || [];
+      const mealNames = rawMeals.map(m => m.strMeal);
+      const translatedNames = await translateBulkTexts(mealNames);
+
+      const mappedRecipes = rawMeals.map((meal, index) => ({
         ...meal,
         strMealOriginal: meal.strMeal,
-        strMeal: translateMealName(meal.strMeal),
+        strMeal: translatedNames[index] || meal.strMeal,
         isRecipe: true, // Flag to show ingredients in details
         recipeCost: Math.floor(Math.random() * 50) + 70 // Fake price for buying ingredients
       }));

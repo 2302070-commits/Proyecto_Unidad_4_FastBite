@@ -5,6 +5,7 @@ import LoginScreen from '../screens/LoginScreen';
 import TabNavigator from './TabNavigator';
 import FoodDetailScreen from '../screens/FoodDetailScreen';
 import CheckoutScreen from '../screens/CheckoutScreen';
+import SupportScreen from '../screens/SupportScreen';
 
 const Stack = createStackNavigator();
 
@@ -45,6 +46,11 @@ export default function AppNavigator() {
         name="Checkout" 
         component={CheckoutScreen} 
         options={{ title: 'Confirmar Pedido' }} 
+      />
+      <Stack.Screen 
+        name="Support" 
+        component={SupportScreen} 
+        options={{ title: 'Ayuda y Soporte' }} 
       />
     </Stack.Navigator>
   );

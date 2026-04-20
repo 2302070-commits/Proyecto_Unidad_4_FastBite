@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Text, Card, Searchbar } from 'react-native-paper';
 import { translateBulkTexts } from '../utils/translator';
 
-export default function HomeScreen({ navigation }) {
+export default function MenuScreen({ navigation }) {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +21,7 @@ export default function HomeScreen({ navigation }) {
     return map[cat] || cat;
   };
 
-  const fetchMeals = async (query = 'burger') => {
+  const fetchMeals = async (query = 'chicken') => {
     setLoading(true);
     try {
       const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
@@ -32,18 +32,16 @@ export default function HomeScreen({ navigation }) {
       const translatedNames = await translateBulkTexts(mealNames);
 
       const translatedMeals = rawMeals.map((meal, index) => {
-        const originalPrice = Math.floor(Math.random() * 80) + 120; // 120 - 200
-        const rescuePrice = Math.floor(originalPrice * 0.35); // Big discount
+        const price = Math.floor(Math.random() * 80) + 100; // 100 - 180
         
         return {
           ...meal,
           strMealOriginal: meal.strMeal,
           strMeal: translatedNames[index] || meal.strMeal,
           strCategory: translateCategory(meal.strCategory),
-          strInstructions: 'Porción excedente en perfecto estado rescatada de restaurantes o panaderías locales. ¡Sálvala antes de que cierre el local!',
-          originalPrice,
-          rescuePrice,
-          isRescue: true
+          strInstructions: 'Delicioso platillo preparado al momento con los mejores ingredientes, listo para que lo disfrutes.',
+          price,
+          isNormal: true
         };
       });
 
@@ -71,8 +69,7 @@ export default function HomeScreen({ navigation }) {
         <Text variant="bodySmall" style={styles.category}>{item.strCategory}</Text>
         
         <View style={styles.priceContainer}>
-          <Text style={styles.originalPrice}>${item.originalPrice}</Text>
-          <Text style={styles.rescuePrice}>${item.rescuePrice}</Text>
+          <Text style={styles.price}>${item.price}</Text>
         </View>
       </Card.Content>
     </Card>
@@ -81,19 +78,19 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text variant="headlineMedium" style={styles.headerTitle}>¿Qué comida salvarás hoy?</Text>
+        <Text variant="headlineMedium" style={styles.headerTitle}>Nuestro Menú</Text>
         <Searchbar
-          placeholder="Busca por ingrediente..."
+          placeholder="Busca por platillo..."
           onChangeText={onChangeSearch}
           value={searchQuery}
           style={styles.searchbar}
-          iconColor="#2e7d32"
+          iconColor="#ff9800"
         />
       </View>
 
       {loading ? (
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#2e7d32" />
+          <ActivityIndicator size="large" color="#ff9800" />
         </View>
       ) : foods.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -180,16 +177,10 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     marginTop: 8,
   },
-  originalPrice: {
-    textDecorationLine: 'line-through',
-    color: '#aaa',
-    fontSize: 12,
-  },
-  rescuePrice: {
-    color: '#2e7d32',
+  price: {
+    color: '#ff9800',
     fontWeight: 'bold',
     fontSize: 16,
   }
